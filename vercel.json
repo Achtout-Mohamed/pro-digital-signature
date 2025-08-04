@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/digital-signature-tool/index.html"
+    }
+  ]
+}
