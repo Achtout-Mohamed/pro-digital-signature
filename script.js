@@ -522,65 +522,33 @@ function downloadAsImage() {
 }
 
 function downloadAsPDF() {
-    // For PDF, we'll create an image first, then embed it in a PDF
     const docArea = document.getElementById('documentArea');
     
-    // Load jsPDF library first
+    // Remove the button completely before capture
+    const button = docArea.querySelector('button');
+    if (button) button.remove();
+    
     loadJsPDF().then(() => {
-        if (typeof html2canvas !== 'undefined') {
-            html2canvas(docArea, {
-                useCORS: true,
-                allowTaint: true,
-                scale: 2,
-                backgroundColor: '#ffffff',
-                logging: false
-            }).then(canvas => {
-                createPDFFromCanvas(canvas);
-            }).catch(error => {
-                console.error('html2canvas failed for PDF:', error);
-                // Fallback to manual canvas creation
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                
-                const scale = 2;
-                canvas.width = Math.max(docArea.scrollWidth, 800) * scale;
-                canvas.height = Math.max(docArea.scrollHeight, 600) * scale;
-                ctx.scale(scale, scale);
-                
-                ctx.fillStyle = '#ffffff';
-                ctx.fillRect(0, 0, canvas.width / scale, canvas.height / scale);
-                
-                processDocumentContent(ctx, docArea).then(() => {
-                    createPDFFromCanvas(canvas);
-                });
-            });
-        } else {
-            loadHtml2Canvas().then(() => {
-                downloadAsPDF();
-            }).catch(() => {
-                // Final fallback - create manual canvas
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                
-                const scale = 2;
-                canvas.width = Math.max(docArea.scrollWidth, 800) * scale;
-                canvas.height = Math.max(docArea.scrollHeight, 600) * scale;
-                ctx.scale(scale, scale);
-                
-                ctx.fillStyle = '#ffffff';
-                ctx.fillRect(0, 0, canvas.width / scale, canvas.height / scale);
-                
-                processDocumentContent(ctx, docArea).then(() => {
-                    createPDFFromCanvas(canvas);
-                });
-            });
-        }
-    }).catch(() => {
-        alert('Unable to load PDF library. Download will be saved as image instead.');
-        downloadAsImage();
+        html2canvas(docArea, {
+            scale: 2,
+            backgroundColor: '#ffffff'
+        }).then(canvas => {
+            const imgData = canvas.toDataURL('image/jpeg', 0.95);
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            
+            const imgWidth = 210;
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            
+            pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight);
+            
+            const fileName = originalFileName ? 
+                originalFileName.replace('.pdf', '_signed.pdf') : 
+                'signed-document.pdf';
+            
+            pdf.save(fileName);
+        });
     });
 }
-
 function createPDFFromCanvas(canvas) {
     try {
         const imgData = canvas.toDataURL('image/jpeg', 0.95);
