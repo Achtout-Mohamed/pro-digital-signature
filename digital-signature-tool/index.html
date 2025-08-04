@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro Digital Signature</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Digital Signature Tool</h1>
+            <p>Create and apply your signature to documents instantly</p>
+        </div>
+        
+        <!-- Signature Creation -->
+        <div class="card">
+            <div class="card-header">
+                <h2>Create Your Signature</h2>
+            </div>
+            <div class="card-body">
+                <canvas id="signatureCanvas" class="signature-canvas"></canvas>
+                <div class="btn-group">
+                    <button class="btn btn-outline" onclick="clearSignature()">Clear</button>
+                    <button class="btn btn-primary" onclick="saveSignature()">Save Signature</button>
+                </div>
+                <div id="signatureStatus"></div>
+            </div>
+        </div>
+        
+        <!-- Document Area -->
+        <div class="card">
+            <div class="card-header">
+                <h2>Document</h2>
+            </div>
+            <div class="card-body">
+                <div class="btn-group" style="margin-bottom: 20px;">
+                    <label for="fileInput" class="btn btn-primary">
+                        Upload Document
+                    </label>
+                    <button class="btn btn-outline" onclick="createSampleDoc()">Use Sample</button>
+                    <button class="btn btn-secondary" onclick="downloadDocument()" id="downloadBtn" disabled>Download</button>
+                </div>
+                
+                <input type="file" id="fileInput" class="file-input" accept="image/*,.pdf,.doc,.docx,.txt,.rtf">
+                
+                <div id="documentArea" class="document-area">
+                    <div class="upload-area">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                        </svg>
+                        <h3>Upload a document or use a sample</h3>
+                        <p>Upload documents: Images (JPG, PNG), PDFs, Word docs (.doc, .docx), Text files (.txt), or RTF files</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
